@@ -11,10 +11,10 @@ public class Tree {
 		boolean evenLevel;
 
 		public Node(double lat, double lon, String county, boolean evenLevel) {
-			data = new Coordinate(lat, lon, county);
-			leftChild = null;
-			rightChild = null;
-			evenLevel = evenLevel;
+			this.data = new Coordinate(lat, lon, county);
+			this.leftChild = null;
+			this.rightChild = null;
+			this.evenLevel = evenLevel;
 		}
 	}
  	
@@ -42,7 +42,7 @@ public class Tree {
 
  	public static Node insert(Node node, Coordinate c, boolean evenLevel) {
  		if (node==null) {
- 			Node n = new Node(c.lon, c.lat, c.county, !evenLevel);
+ 			Node n = new Node(c.lat, c.lon, c.county, !evenLevel);
  			return n;
  		}
  		else if (comparePoints(node, c, evenLevel)) {
