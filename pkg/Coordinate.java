@@ -7,8 +7,8 @@ public class Coordinate {
 	public String county;
 
 	public Coordinate(double lat, double lon, String county) {
-		lat = lat;
-		lon = lon;
-		county = county;
+		this.lat = lat;
+		this.lon = lon;
+		this.county = county;
 	}
 }
