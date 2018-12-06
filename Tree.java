@@ -17,7 +17,8 @@ public class Tree {
 	}
 
 	public Coordinate(double lon, double lat, String county) {
-		coordPair = Haversine(lon, lat)[0];
+		lat = lat;
+		lon = lon;
 		county = county;
 	}
  	
@@ -25,12 +26,9 @@ public class Tree {
 
  	private Node root;
 
- 	public static int[] Haversine(double longitude, double latitude) {
- 		coordPair = new int[]{0, 0};
-
- 	}
-
  	public boolean comparePoints(Node n, Coordinate c, boolean evenLevel) {
+ 		// On even levels, we look at x coordinates, else y coordinates
+ 		// Goes to the right if returns true, left if returns false
         if (evenLevel) {
             return c.x() > n.data.x();
         }
