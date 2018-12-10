@@ -1,6 +1,7 @@
 package pkg;
 
 import java.io.*;
+import java.util.ArrayList
 
 public class Tree {
 
@@ -21,6 +22,8 @@ public class Tree {
 	int dimensions = 2;
 
  	public static Node root;
+ 	public static ArrayList<Coordinate> coordsX;
+ 	public static ArrayList<Coordinate> coordsY;
 
  	public static boolean comparePoints(Node n, Coordinate c, boolean evenLevel) {
  		// On even levels, we look at x coordinates, else y coordinates
@@ -29,6 +32,72 @@ public class Tree {
             return c.lat > n.data.lat;
         }
         else return c.lon > n.data.lon;
+    }
+
+    public static void sortCoords(ArrayList<Coordinate> coords, boolean sortByX) {
+    	if (coords == null || coords.size() == 0) {
+            return;
+        }
+        this.array = coords;
+        length = coords.size();
+        if (sortByX) {
+        	quickSortX(0, length - 1);
+        }
+        else {
+        	quickSortY(0, length - 1);
+        }
+    }
+
+    private void quickSortX(int lowerIndex, int higherIndex) {
+        
+        int i = lowerIndex;
+        int j = higherIndex;
+        int middle = coordsX.get(lowerIndex+(higherIndex-lowerIndex)/2);
+        while (i <= j) {
+            while (coordsX.get(i) < middle) {
+                i++;
+            }
+            while (coordsX.get(j) > middle) {
+                j--;
+            }
+            if (i <= j) {
+                int temp = coordsX.get(i);
+		        coordsX.get(i) = coordsX.get(j);
+		        coordsX.get(j) = temp;
+                i++;
+                j--;
+            }
+        }
+        if (lowerIndex < j)
+            quickSortX(lowerIndex, j);
+        if (i < higherIndex)
+            quickSortX(i, higherIndex);
+    }
+
+    private void quickSortY(int lowerIndex, int higherIndex) {
+        
+        int i = lowerIndex;
+        int j = higherIndex;
+        int middle = coordsY.get(lowerIndex+(higherIndex-lowerIndex)/2);
+        while (i <= j) {
+            while (coordsY.get(i) < middle) {
+                i++;
+            }
+            while (coordsY.get(j) > middle) {
+                j--;
+            }
+            if (i <= j) {
+                int temp = coordsY.get(i);
+		        coordsY.get(i) = coordsY.get(j);
+		        coordsY.get(j) = temp;
+                i++;
+                j--;
+            }
+        }
+        if (lowerIndex < j)
+            quickSortY(lowerIndex, j);
+        if (i < higherIndex)
+            quickSortY(i, higherIndex);
     }
 
     public static void Insert(Coordinate c) {
@@ -45,6 +114,9 @@ public class Tree {
  			Node n = new Node(c.lat, c.lon, c.county, !evenLevel);
  			return n;
  		}
+ 		else if (node.lat == c.lat && node.lon == c.lon) {
+ 			return;
+ 		}
  		else if (comparePoints(node, c, evenLevel)) {
  			//insert as right child
  			node.rightChild = insert(node.rightChild, c, !evenLevel);
@@ -58,27 +130,10 @@ public class Tree {
 
 	public static void main(String[] args) throws Exception {
 
-		// Tree t = new Tree();
-
-		// t.Insert(new Coordinate(100.0,10.0,"County"));
-		// t.Insert(new Coordinate(50.0,200.0,"County"));
-		// t.Insert(new Coordinate(250.0,7.0,"County"));
-		// t.Insert(new Coordinate(75.0,4.0,"County"));
-		// t.Insert(new Coordinate(27.0,400.0,"County"));
-		// t.Insert(new Coordinate(470.0,2.0,"County"));
-		// t.Insert(new Coordinate(150.0,82.0,"County"));
-
-		// System.out.printf("should be 100 %f\n", root.data.lat);
-		// System.out.printf("should be 50 %f\n", root.leftChild.data.lat);
-		// System.out.printf("should be 250 %f\n", root.rightChild.data.lat);
-		// System.out.printf("should be 75 %f\n", root.leftChild.leftChild.data.lat);
-		// System.out.printf("should be 27 %f\n", root.leftChild.rightChild.data.lat);
-		// System.out.printf("should be 470 %f\n", root.rightChild.leftChild.data.lat);
-		// System.out.printf("should be 150 %f\n", root.rightChild.rightChild.data.lat);
-
-
 		Tree t = new Tree();
+		ArrayList<Coordinate> coords = new ArrayList<Coordinate>(); // ArrayList because we don't know the size beforehand
 
+		// Read data from file to create tree
 		File file = new File("TestData.txt"); 
 
 		BufferedReader br = new BufferedReader(new FileReader(file)); 
@@ -91,11 +146,22 @@ public class Tree {
 				continue;
 			}
 			String[] pieces = st.split("\\s+");			
-			String county = pieces[0] + " - " + pieces[1];
+			String county = pieces[0] + " - " + pieces[1]; // Concat state and county
 			Double lat = Double.parseDouble(pieces[2]);
 			Double lon = Double.parseDouble(pieces[3]);
-			t.Insert(new Coordinate(lat, lon, county));
+			Coordinate c = new Coordinate(lat, lon, county);
+			coords.add(c);
+			// t.Insert(new Coordinate(lat, lon, county));
 		} 
+
+		// Continue to grab and insert median until all elements are inserted into the tree
+		sortCoords(coords, true);
+		sortCoords(coords, false);
+		for (int i=0; i<coords.size(); i++) {
+			median = 0; // TODO: grab median from coords
+			t.Insert(coordsX.get(median));
+			t.Insert(coordsY.get(median));
+		}
 
 		System.out.printf("should be Benton: %s\n", root.data.county);
 		System.out.printf("should be Maricopa: %s\n", root.leftChild.data.county);
