@@ -157,10 +157,24 @@ public class Tree {
 		// Continue to grab and insert median until all elements are inserted into the tree
 		sortCoords(coords, true);
 		sortCoords(coords, false);
+		int halfSize = coords.size() / 2;
+		int fullSize = coords.size();
+		int divisor = 2;
+		boolean halfDone = false;
 		for (int i=0; i<coords.size(); i++) {
-			median = 0; // TODO: grab median from coords
-			t.Insert(coordsX.get(median));
-			t.Insert(coordsY.get(median));
+			if (halfDone) {
+				int medianIndex = i/divisor + halfSize;
+			} else {
+				int medianIndex = i/divisor;
+			}
+			t.Insert(coordsX.get(medianIndex));
+			t.Insert(coordsY.get(medianIndex));
+			if (divisor == halfSize) {
+				divisor = 2;
+				halfDone = true;
+			} else {
+				divisor = divisor * 2;
+			}
 		}
 
 		System.out.printf("should be Benton: %s\n", root.data.county);
