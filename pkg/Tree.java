@@ -76,6 +76,7 @@ public class Tree {
  		}
  		return node;
  	}
+
  	public static void FindMedian(ArrayList<Coordinate> coords, boolean isEvenLevel, int n) {
  		
  		int mid = (n-1)/2;
@@ -180,6 +181,7 @@ public class Tree {
    //  		rX = (ArrayList<Coordinate>) coords.clone(); // Includes after mid
 			// rY = (ArrayList<Coordinate>) coords.clone(); // Includes after mid
 		 	FindMedian(coords, true, coords.size());
+
 		 	long endTime = System.nanoTime();
 			long timeElapsed = endTime - startTime;
 			System.out.println("\nBalanced tree created\n");
@@ -193,6 +195,7 @@ public class Tree {
 			System.out.printf("should be Pottawattamie: %s\n", root.rightChild.leftChild.data.county);
 			System.out.printf("should be Washington: %s\n", root.rightChild.rightChild.data.county);
 			System.out.printf("should be Summit: %s\n", root.rightChild.rightChild.rightChild.data.county);
+
 		}
 		// For testing with smaller data set -- should NOT be used in prod
 		if (balanced.equals("no")) {
