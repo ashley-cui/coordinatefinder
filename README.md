@@ -15,7 +15,7 @@ Ensure that the Java JDK is installed on your computer.
 
 To run the program, simply run the following commands in the main project directory:
 ```bash
-$ javac pkg/Tree.java
+$ javac pkg/*.java
 $ java pkg/Tree
 ``` 
 This will compile and run the code, and then prompt the user for each of
