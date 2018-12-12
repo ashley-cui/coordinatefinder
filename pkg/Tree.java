@@ -76,63 +76,47 @@ public class Tree {
  		}
  		return node;
  	}
-
  	public static void FindMedian(ArrayList<Coordinate> coords, boolean isEvenLevel, int n) {
-
-	    if (n < 2) {
-	    	Insert(coords.get(0));
-	        return;
-	    }
-
-	    int mid = n/2;
-
-	    for (Coordinate c : coords) {
-		    System.out.println(c.county);
-		}
-		System.out.println("done\n");
-
-	    ArrayList<Coordinate> l = new ArrayList<Coordinate>();
+ 		
+ 		int mid = (n-1)/2;
+ 		ArrayList<Coordinate> l = new ArrayList<Coordinate>();
 	    ArrayList<Coordinate> r = new ArrayList<Coordinate>();
+	    if (n==0){
 
-		if (isEvenLevel) {
-			// if (coords.size() == 2) {
-			//     Insert(coords.get(0));
-			//     Insert(coords.get(1));
-			//     return;
-			// }
-
-			for (int i = 0; i < mid; i++) {
+	    	return;
+	    }
+	    // if (n==1){
+	    // 	Insert(coords.get(0));
+	    // 	return;
+	    // }
+ 		if(isEvenLevel){
+ 			Collections.sort(coords, Coordinate.coordsXComparator);
+ 			Insert(coords.get(mid));
+ 			for (int i = 0; i < mid; i++) {
 		        l.add(coords.get(i));
 		    }
 		    for (int i = mid+1; i < n; i++) {
 		        r.add(coords.get(i));
 		    }
-		    Insert(coords.get(mid));
-		    Collections.sort(l, Coordinate.coordsYComparator);
-		    Collections.sort(r, Coordinate.coordsYComparator);
-		    FindMedian(l, !isEvenLevel, l.size()-1);
-		    FindMedian(r, !isEvenLevel, r.size()-1);
-		} else {
-			// if (coords.size() == 2) {
-			//     Insert(coords.get(0));
-			//     Insert(coords.get(1));
-			//     return;
-			// }
-			for (int i = 0; i < mid; i++) {
+		    FindMedian(l, !isEvenLevel, l.size());
+		    FindMedian(r, !isEvenLevel, r.size());
+
+ 		}
+ 		else{
+ 			Collections.sort(coords, Coordinate.coordsYComparator);
+ 			Insert(coords.get(mid));
+ 			for (int i = 0; i < mid; i++) {
 		        l.add(coords.get(i));
 		    }
 		    for (int i = mid+1; i < n; i++) {
 		        r.add(coords.get(i));
 		    }
-		    Insert(coords.get(mid));
-		    Collections.sort(l, Coordinate.coordsXComparator);
-		    Collections.sort(r, Coordinate.coordsXComparator);
-		    FindMedian(l, !isEvenLevel, l.size()-1);
-		    FindMedian(r, !isEvenLevel, r.size()-1);
-		}
+		    FindMedian(l, !isEvenLevel, l.size());
+		    FindMedian(r, !isEvenLevel, r.size());
 
+ 		}
  	}
-
+ 
 
 	public static void main(String[] args) throws Exception {
 
@@ -208,7 +192,7 @@ public class Tree {
 			System.out.printf("should be Benton: %s\n", root.leftChild.rightChild.rightChild.data.county);
 			System.out.printf("should be Pottawattamie: %s\n", root.rightChild.leftChild.data.county);
 			System.out.printf("should be Washington: %s\n", root.rightChild.rightChild.data.county);
-			System.out.printf("should be Summit: %s\n", root.rightChild.rightChild.leftChild.data.county);
+			System.out.printf("should be Summit: %s\n", root.rightChild.rightChild.rightChild.data.county);
 		}
 		// For testing with smaller data set -- should NOT be used in prod
 		if (balanced.equals("no")) {
