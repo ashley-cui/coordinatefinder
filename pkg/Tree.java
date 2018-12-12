@@ -2,6 +2,7 @@ package pkg;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Tree {
 
@@ -129,6 +130,17 @@ public class Tree {
  	}
 
 	public static void main(String[] args) throws Exception {
+
+		Scanner input = new Scanner(System.in);
+
+		System.out.println("Enter a latitude: ");
+		Double inputLat = input.nextDouble();
+
+		System.out.println("Enter a longitude: ");
+		Double inputLon = input.nextDouble();
+
+		System.out.println("Enter the number of neighbors: ");
+		int k = input.nextInt();
 
 		Tree t = new Tree();
 		ArrayList<Coordinate> coords = new ArrayList<Coordinate>(); // ArrayList because we don't know the size beforehand

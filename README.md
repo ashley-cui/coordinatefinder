@@ -15,9 +15,10 @@ Ensure that the Java JDK is installed on your computer.
 
 To run the program, simply run the following command in the main project directory:
 ```
-$ ./scripts/run-program.sh
+$ javac pkg/Tree.java
+$ java pkg/Tree
 ``` 
-This script will compile and run the code, and then prompt the user for each of
+This will compile and run the code, and then prompt the user for each of
 three things:
 1. The latitude of the query
 2. The longitude of the query
@@ -51,7 +52,7 @@ the county and state combination that appears most frequently.
 
 To prove that the K-nearest-neighbors algorithm is faster, it is compared with the 
 brute force method.  The brute force method is contained within a separate function
-that does not run automatically with the `run-program.sh` script.  To implement the
-brute force method, simply uncomment the code with the "BRUTE FORCE" comment line
-above it in the `Tree.java` file.  Then run the script as normal.
+that does not run automatically.  To implement the brute force method, simply uncomment
+the code with the "BRUTE FORCE" comment line above it in the `Tree.java` file.  Then
+run the program as normal.
 
