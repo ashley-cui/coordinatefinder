@@ -13,8 +13,8 @@ Additionally, it will provide the county and state of the input.
 
 Ensure that the Java JDK is installed on your computer.
 
-To run the program, simply run the following command in the main project directory:
-```
+To run the program, simply run the following commands in the main project directory:
+```bash
 $ javac pkg/Tree.java
 $ java pkg/Tree
 ``` 

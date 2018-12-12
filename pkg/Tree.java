@@ -129,6 +129,40 @@ public class Tree {
  		return node;
  	}
 
+ 	public void FindMedian(ArrayList<Coordinate> xCoords, ArrayList<Coordinate> yCoords, boolean isEvenLevel, int n) {
+	    if (n < 2) {
+	        return;
+	    }
+	    int mid = n / 2;
+	    ArrayList<Coordinate> lX = new ArrayList<Coordinate>(); // Includes up to mid
+	    ArrayList<Coordinate> lY = new ArrayList<Coordinate>(); // Includes up to mid
+	    ArrayList<Coordinate> rX = new ArrayList<Coordinate>(); // Includes after mid
+	    ArrayList<Coordinate> rY = new ArrayList<Coordinate>(); // Includes after mid
+		
+		if (isEvenLevel) {
+			for (int i = 0; i < mid; i++) {
+		        lX.add(xCoords.get(i));
+		    }
+		    for (int i = mid; i < n; i++) {
+		        rX.add(xCoords.get(i));
+		    }
+		    Insert(xCoords.get(mid));
+		    FindMedian(lX, lY, !isEvenLevel, mid);
+		    FindMedian(rX, rY, !isEvenLevel, n - mid);
+		} else {
+			for (int i = 0; i < mid; i++) {
+		        lY.add(yCoords.get(i));
+		    }
+		    for (int i = mid; i < n; i++) {
+		        rY.add(yCoords.get(i));
+		    }
+		    Insert(yCoords.get(mid));
+		    FindMedian(lX, rX, !isEvenLevel, mid);
+		    FindMedian(rX, rY, !isEvenLevel, n - mid);
+		}
+
+ 	}
+
 	public static void main(String[] args) throws Exception {
 
 		Scanner input = new Scanner(System.in);
