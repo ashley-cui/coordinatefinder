@@ -77,50 +77,66 @@ public class Tree {
  		return node;
  	}
 
- 	public static void FindMedian(ArrayList<Coordinate> xCoords, ArrayList<Coordinate> yCoords, boolean isEvenLevel, int n) {
+ 	public static void FindMedian(ArrayList<Coordinate> coords, boolean isEvenLevel, int n) {
 
-	    if (n < 2) {
+	    if (coords.size() < 2) {
+	    	Insert(coords.get(0));
 	        return;
 	    }
 
-		// System.out.println("\nx" + xCoords);
-		// System.out.println("\ny" + yCoords);
-		if (isEvenLevel && xCoords.size() >= 2) {
-			if (xCoords.size() == 2) {
-			    Insert(xCoords.get(0));
-			    Insert(xCoords.get(1));
+	    int mid = n/2;
+	    // if (n%2 != 0) {
+	    // 	n++;
+	    // }
+
+	    System.out.println("\n");
+	    for (Coordinate c : coords) {
+		    System.out.println(c.county);
+		}
+		System.out.println("done");
+
+	    ArrayList<Coordinate> l = new ArrayList<Coordinate>();
+	    ArrayList<Coordinate> r = new ArrayList<Coordinate>();
+
+		if (isEvenLevel) {
+			if (coords.size() == 2) {
+				System.out.println("here\n");
+			    Insert(coords.get(0));
+			    l.add(coords.get(1));
+			    FindMedian(l, !isEvenLevel, 1);
+			    Insert(coords.get(1));
+			} else {
+
+				for (int i = 0; i < mid; i++) {
+			        l.add(coords.get(i));
+			    }
+			    for (int i = mid+1; i <= n; i++) {
+			        r.add(coords.get(i));
+			    }
+			    Insert(coords.get(mid));
+			    Collections.sort(l, Coordinate.coordsYComparator);
+			    Collections.sort(r, Coordinate.coordsYComparator);
+			    FindMedian(l, !isEvenLevel, l.size()-1);
+			    FindMedian(r, !isEvenLevel, r.size()-1);
+			}
+		} else {
+			if (coords.size() == 2) {
+				System.out.println("here2\n");
+			    Insert(coords.get(0));
+			    Insert(coords.get(1));
 			    return;
 			}
-		    midX = n / 2;
-			lX = new ArrayList<Coordinate>();
-			rX = new ArrayList<Coordinate>();
-			for (int i = 0; i < midX; i++) {
-		        lX.add(xCoords.get(i));
+			for (int i = 0; i < mid; i++) {
+		        l.add(coords.get(i));
 		    }
-		    for (int i = midX; i < n; i++) {
-		        rX.add(xCoords.get(i));
+		    for (int i = mid+1; i <= n; i++) {
+		        r.add(coords.get(i));
 		    }
-		    Insert(xCoords.get(midX));
-		    FindMedian(lX, lY, !isEvenLevel, midY);
-		    FindMedian(rX, rY, !isEvenLevel, n - midY);
-		} else if (yCoords.size() >= 2) {
-			if (yCoords.size() == 2) {
-			    Insert(yCoords.get(0));
-			    Insert(yCoords.get(1));
-			    return;
-			}
-		    midY = n / 2;
-			lY = new ArrayList<Coordinate>();
-			rY = new ArrayList<Coordinate>();
-			for (int i = 0; i < midY; i++) {
-		        lY.add(yCoords.get(i));
-		    }
-		    for (int i = midY; i < n; i++) {
-		        rY.add(yCoords.get(i));
-		    }
-		    Insert(yCoords.get(midY));
-		    FindMedian(lX, lY, !isEvenLevel, midX);
-		    FindMedian(rX, rY, !isEvenLevel, n - midX);
+		    Insert(coords.get(mid));
+		    Collections.sort(l, Coordinate.coordsXComparator);
+		    Collections.sort(r, Coordinate.coordsXComparator);
+		    FindMedian(l, !isEvenLevel, l.size()-1);
+		    FindMedian(r, !isEvenLevel, r.size()-1);
 		}
 
  	}
@@ -179,35 +195,28 @@ public class Tree {
 		} 
 
 		if (balanced.equals("yes")) {
-			@SuppressWarnings("unchecked")
-			ArrayList<Coordinate> coordsX = (ArrayList<Coordinate>) coords.clone();
-			@SuppressWarnings("unchecked")
-			ArrayList<Coordinate> coordsY = (ArrayList<Coordinate>) coords.clone();
-			// Sort once by x (lat) coorinates, and once by y (lon) coordinates
-			// mergeSort(coords, coords.size(), true);
-			// mergeSort(coords, coords.size(), false);
-			Collections.sort(coordsX, Coordinate.coordsXComparator);
-			Collections.sort(coordsY, Coordinate.coordsYComparator);
+			Collections.sort(coords, Coordinate.coordsXComparator);
+			// Collections.sort(coordsY, Coordinate.coordsYComparator);
 
 			// Continue to grab and insert median until all elements are inserted into the tree
-			lX = (ArrayList<Coordinate>) coords.clone(); // Includes up to mid
-    		lY = (ArrayList<Coordinate>) coords.clone(); // Includes up to mid
-    		rX = (ArrayList<Coordinate>) coords.clone(); // Includes after mid
-			rY = (ArrayList<Coordinate>) coords.clone(); // Includes after mid
-		 	FindMedian(coordsX, coordsY, true, coords.size());
+			// lX = (ArrayList<Coordinate>) coords.clone(); // Includes up to mid
+   //  		lY = (ArrayList<Coordinate>) coords.clone(); // Includes up to mid
+   //  		rX = (ArrayList<Coordinate>) coords.clone(); // Includes after mid
+			// rY = (ArrayList<Coordinate>) coords.clone(); // Includes after mid
+		 	FindMedian(coords, true, coords.size()-1);
 		 	long endTime = System.nanoTime();
 			long timeElapsed = endTime - startTime;
 			System.out.println("\nBalanced tree created\n");
 			System.out.println("Execution time in nanoseconds: " + timeElapsed);
 			System.out.printf("should be Buchanan: %s\n", root.data.county);
-			System.out.printf("should be McCurtain: %s\n", root.leftChild.data.county);
-			System.out.printf("should be Pottawattamie: %s\n", root.rightChild.data.county);
+			System.out.printf("should be Maricopa: %s\n", root.leftChild.data.county);
+			System.out.printf("should be Lake: %s\n", root.rightChild.data.county);
 			System.out.printf("should be Maui: %s\n", root.leftChild.leftChild.data.county);
 			System.out.printf("should be McCurtain: %s\n", root.leftChild.rightChild.data.county);
 			System.out.printf("should be Pottawattamie: %s\n", root.rightChild.leftChild.data.county);
 			System.out.printf("should be Washington: %s\n", root.rightChild.rightChild.data.county);
-			System.out.printf("should be Lake: %s\n", root.rightChild.rightChild.rightChild.data.county);
-			System.out.printf("should be Summit: %s\n", root.rightChild.rightChild.rightChild.rightChild.data.county);
+			System.out.printf("should be Benton: %s\n", root.leftChild.rightChild.rightChild.data.county);
+			System.out.printf("should be Summit: %s\n", root.rightChild.rightChild.leftChild.data.county);
 		}
 		// For testing with smaller data set -- should NOT be used in prod
 		if (balanced.equals("no")) {
