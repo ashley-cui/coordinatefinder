@@ -3,6 +3,7 @@ package pkg;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Tree {
 
@@ -175,6 +176,8 @@ public class Tree {
 		System.out.println("Would you like to use a balanced tree? (yes/no): ");
 		String balanced = input.next();
 
+		long startTime = System.nanoTime();
+
 		Tree t = new Tree();
 		ArrayList<Coordinate> coords = new ArrayList<Coordinate>(); // ArrayList because we don't know the size beforehand
 
@@ -208,9 +211,17 @@ public class Tree {
 			mergeSort(coords, coords.size(), false);
 			// Continue to grab and insert median until all elements are inserted into the tree
 		 	FindMedian(coordsX, coordsY, true, coords.size());
+		 	long endTime = System.nanoTime();
+			long timeElapsed = endTime - startTime;
+			System.out.println("Balanced tree created\n");
+			System.out.println("Execution time in nanoseconds: " + timeElapsed);
 		}
 		// For testing with smaller data set -- should NOT be used in prod
 		if (balanced.equals("no")) {
+			long endTime = System.nanoTime();
+			long timeElapsed = endTime - startTime;
+			System.out.println("Unbalanced tree created\n");
+			System.out.println("Execution time in nanoseconds: " + timeElapsed);
 			System.out.printf("should be Benton: %s\n", root.data.county);
 			System.out.printf("should be Maricopa: %s\n", root.leftChild.data.county);
 			System.out.printf("should be Buchanan: %s\n", root.rightChild.data.county);

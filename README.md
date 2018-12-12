@@ -45,6 +45,9 @@ The program utilizes a K-nearest-neighbors algorithm to efficiently find the K
 nearest neighbors to the input point, where K is between 1 and 10.  To calculate
 the distance between the input point and the data points in our data set, it utilizes
 [equirectangular approximation](http://www.movable-type.co.uk/scripts/latlong.html).
+With a priority queue, the program stores the K closest points that it has found so
+far, replacing the values with closer ones as it progresses through the nodes in 
+the tree.
 
 ### Computing the County and State of the Input
 To determine a given input coordinate's county and state, the program looks first at
@@ -55,9 +58,10 @@ the county and state combination that appears most frequently.
 
 ## Comparisons
 
-To prove that the K-nearest-neighbors algorithm is faster, it is compared with the 
-brute force method.  The brute force method is contained within a separate function
-that does not run automatically.  To implement the brute force method, simply uncomment
-the code with the "BRUTE FORCE" comment line above it in the `Tree.java` file.  Then
-run the program as normal.
+To prove that the balanced k-d tree is faster, it is compared with the unbalanced tree.
+When the program is run, the user is prompted to specify whether they want to use a
+balanced or unbalanced tree.  Upon specification, the program will run with that type
+of tree.  Once it has finished running, the program will tell you how long it took to
+run in nanoseconds.  This number can be compared with the time from using the alternative
+version of the tree to see which method will run faster.
 
