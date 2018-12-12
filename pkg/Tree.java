@@ -23,8 +23,8 @@ public class Tree {
 	int dimensions = 2;
 
  	public static Node root;
- 	public static ArrayList<Coordinate> coordsX;
- 	public static ArrayList<Coordinate> coordsY;
+ 	public static ArrayList<Coordinate> coordsX = new ArrayList<Coordinate>();
+ 	public static ArrayList<Coordinate> coordsY = new ArrayList<Coordinate>();
 
  	public static boolean comparePoints(Node n, Coordinate c, boolean evenLevel) {
  		// On even levels, we look at x coordinates, else y coordinates
@@ -35,71 +35,67 @@ public class Tree {
         else return c.lon > n.data.lon;
     }
 
-    // public static void sortCoords(ArrayList<Coordinate> coords, boolean sortByX) {
-    // 	if (coords == null || coords.size() == 0) {
-    //         return;
-    //     }
-    //     this.array = coords;
-    //     length = coords.size();
-    //     if (sortByX) {
-    //     	quickSortX(0, length - 1);
-    //     }
-    //     else {
-    //     	quickSortY(0, length - 1);
-    //     }
-    // }
+	public static void mergeX(ArrayList<Coordinate> l, ArrayList<Coordinate> r, int left, int right) {
+	  
+	    int i = 0, j = 0, k = 0;
+	    while (i < left && j < right) {
+	        if (l.get(i).lat < r.get(i).lon) {
+	            coordsX.add(l.get(i++));
+	        }
+	        else {
+	            coordsX.add(r.get(j++));
+	        }
+	    }
+	    while (i < left) {
+            coordsX.add(l.get(i++));
+	    }
+	    while (j < right) {
+            coordsX.add(r.get(j++));
+	    }
+	}
 
-    // private void quickSortX(int lowerIndex, int higherIndex) {
-        
-    //     int i = lowerIndex;
-    //     int j = higherIndex;
-    //     int middle = coordsX.get(lowerIndex+(higherIndex-lowerIndex)/2);
-    //     while (i <= j) {
-    //         while (coordsX.get(i) < middle) {
-    //             i++;
-    //         }
-    //         while (coordsX.get(j) > middle) {
-    //             j--;
-    //         }
-    //         if (i <= j) {
-    //             int temp = coordsX.get(i);
-		  //       coordsX.get(i) = coordsX.get(j);
-		  //       coordsX.get(j) = temp;
-    //             i++;
-    //             j--;
-    //         }
-    //     }
-    //     if (lowerIndex < j)
-    //         quickSortX(lowerIndex, j);
-    //     if (i < higherIndex)
-    //         quickSortX(i, higherIndex);
-    // }
+	public static void mergeY(ArrayList<Coordinate> l, ArrayList<Coordinate> r, int left, int right) {
+	  
+	    int i = 0, j = 0, k = 0;
+	    while (i < left && j < right) {
+	        if (l.get(i).lat < r.get(i).lon) {
+	            coordsY.add(l.get(i++));
+	        }
+	        else {
+	            coordsY.add(r.get(j++));
+	        }
+	    }
+	    while (i < left) {
+            coordsY.add(l.get(i++));
+	    }
+	    while (j < right) {
+            coordsY.add(r.get(j++));
+	    }
+	}
 
-    // private void quickSortY(int lowerIndex, int higherIndex) {
-        
-    //     int i = lowerIndex;
-    //     int j = higherIndex;
-    //     int middle = coordsY.get(lowerIndex+(higherIndex-lowerIndex)/2);
-    //     while (i <= j) {
-    //         while (coordsY.get(i) < middle) {
-    //             i++;
-    //         }
-    //         while (coordsY.get(j) > middle) {
-    //             j--;
-    //         }
-    //         if (i <= j) {
-    //             int temp = coordsY.get(i);
-		  //       coordsY.get(i) = coordsY.get(j);
-		  //       coordsY.get(j) = temp;
-    //             i++;
-    //             j--;
-    //         }
-    //     }
-    //     if (lowerIndex < j)
-    //         quickSortY(lowerIndex, j);
-    //     if (i < higherIndex)
-    //         quickSortY(i, higherIndex);
-    // }
+    public static void mergeSort(ArrayList<Coordinate> a, int n, boolean sortByX) {
+	    if (n < 2) {
+	        return;
+	    }
+	    int mid = n / 2;
+	    ArrayList<Coordinate> l = new ArrayList<Coordinate>(); // Includes up to mid
+	    ArrayList<Coordinate> r = new ArrayList<Coordinate>(); // Includes after mid
+	 
+	    for (int i = 0; i < mid; i++) {
+		    l.add(a.get(i));
+	    }
+	    for (int i = mid; i < n; i++) {
+		    r.add(a.get(i));
+	    }
+	    mergeSort(l, mid, !sortByX);
+	    mergeSort(r, n - mid, !sortByX);
+	
+		if (sortByX) {
+		    mergeX(l, r, mid, n - mid);
+		} else {
+		    mergeY(l, r, mid, n - mid);
+		}
+    }
 
     public static void Insert(Coordinate c) {
     	if (root == null) {
@@ -129,7 +125,7 @@ public class Tree {
  		return node;
  	}
 
- 	public void FindMedian(ArrayList<Coordinate> xCoords, ArrayList<Coordinate> yCoords, boolean isEvenLevel, int n) {
+ 	public static void FindMedian(ArrayList<Coordinate> xCoords, ArrayList<Coordinate> yCoords, boolean isEvenLevel, int n) {
 	    if (n < 2) {
 	        return;
 	    }
@@ -176,6 +172,9 @@ public class Tree {
 		System.out.println("Enter the number of neighbors: ");
 		int k = input.nextInt();
 
+		System.out.println("Would you like to use a balanced tree? (yes/no): ");
+		String balanced = input.next();
+
 		Tree t = new Tree();
 		ArrayList<Coordinate> coords = new ArrayList<Coordinate>(); // ArrayList because we don't know the size beforehand
 
@@ -198,41 +197,30 @@ public class Tree {
 			Double lon = Double.parseDouble(pieces[3]);
 			Coordinate c = new Coordinate(lat, lon, county, state);
 			coords.add(c);
-			t.Insert(new Coordinate(lat, lon, county, state)); // TODO: remove later
+			if (balanced.equals("no")) {
+				t.Insert(new Coordinate(lat, lon, county, state));
+			}
 		} 
 
-		// Continue to grab and insert median until all elements are inserted into the tree
-		// sortCoords(coords, true);
-		// sortCoords(coords, false);
-		// int halfSize = coords.size() / 2;
-		// int fullSize = coords.size();
-		// int divisor = 2;
-		// boolean halfDone = false;
-		// for (int i=0; i<coords.size(); i++) {
-		// 	if (halfDone) {
-		// 		int medianIndex = i/divisor + halfSize;
-		// 	} else {
-		// 		int medianIndex = i/divisor;
-		// 	}
-		// 	t.Insert(coordsX.get(medianIndex));
-		// 	t.Insert(coordsY.get(medianIndex));
-		// 	if (divisor == halfSize) {
-		// 		divisor = 2;
-		// 		halfDone = true;
-		// 	} else {
-		// 		divisor = divisor * 2;
-		// 	}
-		// }
-
-		System.out.printf("should be Benton: %s\n", root.data.county);
-		System.out.printf("should be Maricopa: %s\n", root.leftChild.data.county);
-		System.out.printf("should be Buchanan: %s\n", root.rightChild.data.county);
-		System.out.printf("should be Maui: %s\n", root.leftChild.leftChild.data.county);
-		System.out.printf("should be McCurtain: %s\n", root.leftChild.rightChild.data.county);
-		System.out.printf("should be Pottawattamie: %s\n", root.rightChild.leftChild.data.county);
-		System.out.printf("should be Washington: %s\n", root.rightChild.rightChild.data.county);
-		System.out.printf("should be Lake: %s\n", root.rightChild.rightChild.rightChild.data.county);
-		System.out.printf("should be Summit: %s\n", root.rightChild.rightChild.rightChild.rightChild.data.county);
+		if (balanced.equals("yes")) {
+			// Sort once by x (lat) coorinates, and once by y (lon) coordinates
+			mergeSort(coords, coords.size(), true);
+			mergeSort(coords, coords.size(), false);
+			// Continue to grab and insert median until all elements are inserted into the tree
+		 	FindMedian(coordsX, coordsY, true, coords.size());
+		}
+		// For testing with smaller data set -- should NOT be used in prod
+		if (balanced.equals("no")) {
+			System.out.printf("should be Benton: %s\n", root.data.county);
+			System.out.printf("should be Maricopa: %s\n", root.leftChild.data.county);
+			System.out.printf("should be Buchanan: %s\n", root.rightChild.data.county);
+			System.out.printf("should be Maui: %s\n", root.leftChild.leftChild.data.county);
+			System.out.printf("should be McCurtain: %s\n", root.leftChild.rightChild.data.county);
+			System.out.printf("should be Pottawattamie: %s\n", root.rightChild.leftChild.data.county);
+			System.out.printf("should be Washington: %s\n", root.rightChild.rightChild.data.county);
+			System.out.printf("should be Lake: %s\n", root.rightChild.rightChild.rightChild.data.county);
+			System.out.printf("should be Summit: %s\n", root.rightChild.rightChild.rightChild.rightChild.data.county);
+		}
 
 	}
 }

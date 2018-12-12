@@ -19,11 +19,13 @@ $ javac pkg/Tree.java
 $ java pkg/Tree
 ``` 
 This will compile and run the code, and then prompt the user for each of
-three things:
+four things:
 1. The latitude of the query
 2. The longitude of the query
 3. K, an integer between 1 and 10, which specifies the number of nearest points
 that the program should return to the user
+4. A string no or yes, with the former indicating the use of an unbalanced tree,
+and the latter indicating the use of a balanced tree.
 
 
 ## Implementation of the Problem
@@ -33,7 +35,10 @@ Written in Java, a K-D tree is implemented in order to properly store the base
 data set that the imput is compared against.  It is useful in storing
 multi-dimensional data, such as the 2-dimensional data type of a geographical
 coordinate.  In order to properly handle these coordinates, a Coordinate class
-is used to store all relevant data (latitude, longitude, county, state).
+is used to store all relevant data (latitude, longitude, county, state).  In order
+to balance the tree, the algorithm first uses Merge Sort to sort the coordinates,
+and then recursively inserts the median into the tree on successively smaller array 
+sizes until all coordinates have been inserted into the tree.
 
 ### Finding the Nearest Neighbors
 The program utilizes a K-nearest-neighbors algorithm to efficiently find the K
