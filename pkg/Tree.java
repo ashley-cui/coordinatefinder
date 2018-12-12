@@ -6,11 +6,13 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.PriorityQueue;
+
 
 
 public class Tree {
 
-	private static class Node {
+	public static class Node {
 		Coordinate data;
 		Node leftChild;
 		Node rightChild;
@@ -137,13 +139,15 @@ public class Tree {
 		System.out.println("Would you like to use a balanced tree? (yes/no): ");
 		String balanced = input.next();
 
+		Coordinate inputCoord = new Coordinate(inputLat, inputLon, "", "");
+
 		long startTime = System.nanoTime();
 
 		Tree t = new Tree();
 		ArrayList<Coordinate> coords = new ArrayList<Coordinate>(); // ArrayList because we don't know the size beforehand
 
 		// Read data from file to create tree
-		File file = new File("TestData.txt"); 
+		File file = new File("TestData.txt"); // TODO: change to big txt file
 
 		BufferedReader br = new BufferedReader(new FileReader(file)); 
 
@@ -181,6 +185,17 @@ public class Tree {
    //  		rX = (ArrayList<Coordinate>) coords.clone(); // Includes after mid
 			// rY = (ArrayList<Coordinate>) coords.clone(); // Includes after mid
 		 	FindMedian(coords, true, coords.size());
+
+		 	Neighbors neigh = new Neighbors();
+
+		 	neigh.KNN(inputCoord, k, root);
+		 	PriorityQueue<ResultTuple> queue = neigh.queue;
+		 	System.out.println("The k nearest points, from furthest to closest are: ");
+		 	for (int i=0; i<k; i++) {
+		 		ResultTuple tup = queue.poll();
+		 		System.out.println("State: " + tup.dat.state + " County: " + tup.dat.county + " Latitude: " + tup.dat.lat + " Longitude: " + tup.dat.lon);
+		 	}
+
 
 		 	long endTime = System.nanoTime();
 			long timeElapsed = endTime - startTime;
