@@ -154,8 +154,8 @@ public class Tree {
 		System.out.println("Enter the longitude: ");
 		Double inputLon = input.nextDouble();
 
-		System.out.println("Enter the number of neighbors (between 1-10): ");
-		int k = input.nextInt();
+		// System.out.println("Enter the number of neighbors (between 1-10): ");
+		// int k = input.nextInt();
 
 		System.out.println("Would you like to use a balanced tree? (yes/no): ");
 		String balanced = input.next();
@@ -168,7 +168,7 @@ public class Tree {
 		ArrayList<Coordinate> coords = new ArrayList<Coordinate>(); // ArrayList because we don't know the size beforehand
 
 		// Read data from file to create tree
-		File file = new File("TestData.txt"); // TODO: change to big txt file
+		File file = new File("NationalFile_StateProvinceDecimalLatLong.txt"); // TODO: change to big txt file
 
 		BufferedReader br = new BufferedReader(new FileReader(file)); 
 
@@ -212,21 +212,14 @@ public class Tree {
 
 		 	Neighbors neigh = new Neighbors();
 		 	Coordinate res = neigh.Nearest(root, inputCoord);
-		 	System.out.println(res.county);
+		 	System.out.println("County: "+ res.county);
+		 	System.out.println("State: "+res.state);
 
 
 		 	endTime = System.nanoTime();
 			long timeElapsedNeigh = endTime - startTime;
 			System.out.println("Neighbor search time in nanoseconds: " + timeElapsedNeigh);
-			System.out.printf("should be Buchanan: %s\n", root.data.county);
-			System.out.printf("should be Maricopa: %s\n", root.leftChild.data.county);
-			System.out.printf("should be Lake: %s\n", root.rightChild.data.county);
-			System.out.printf("should be Maui: %s\n", root.leftChild.leftChild.data.county);
-			System.out.printf("should be McCurtain: %s\n", root.leftChild.rightChild.data.county);
-			System.out.printf("should be Benton: %s\n", root.leftChild.rightChild.rightChild.data.county);
-			System.out.printf("should be Pottawattamie: %s\n", root.rightChild.leftChild.data.county);
-			System.out.printf("should be Washington: %s\n", root.rightChild.rightChild.data.county);
-			System.out.printf("should be Summit: %s\n", root.rightChild.rightChild.rightChild.data.county);
+			
 
 		}
 		// For testing with smaller data set -- should NOT be used in prod
@@ -239,21 +232,14 @@ public class Tree {
 			startTime = System.nanoTime();
 		 	Neighbors neigh = new Neighbors();
 		 	Coordinate res = neigh.Nearest(root, inputCoord);
-		 	System.out.println(res.county);
+		 	System.out.println("County: "+ res.county);
+		 	System.out.println("State: "+res.state);
 
 		 	endTime = System.nanoTime();
 			long timeElapsedNeigh = endTime - startTime;
 			System.out.println("Neighbor search time in nanoseconds: " + timeElapsedNeigh);
 
-			System.out.printf("should be Benton: %s\n", root.data.county);
-			System.out.printf("should be Maricopa: %s\n", root.leftChild.data.county);
-			System.out.printf("should be Buchanan: %s\n", root.rightChild.data.county);
-			System.out.printf("should be Maui: %s\n", root.leftChild.leftChild.data.county);
-			System.out.printf("should be McCurtain: %s\n", root.leftChild.rightChild.data.county);
-			System.out.printf("should be Pottawattamie: %s\n", root.rightChild.leftChild.data.county);
-			System.out.printf("should be Washington: %s\n", root.rightChild.rightChild.data.county);
-			System.out.printf("should be Lake: %s\n", root.rightChild.rightChild.rightChild.data.county);
-			System.out.printf("should be Summit: %s\n", root.rightChild.rightChild.rightChild.rightChild.data.county);
+			
 		}
 
 	}
