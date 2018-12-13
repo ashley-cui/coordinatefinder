@@ -121,6 +121,27 @@ public class Tree {
  	}
  
 
+	public static boolean isDouble( Double a ) {
+
+		Double n;
+
+		try {
+
+			n = (Double) a;
+
+		}
+
+		catch ( NumberFormatException e ) {
+
+		   return false;
+
+		}
+
+		return true;
+
+	}
+
+
 	public static void main(String[] args) throws Exception {
 
 		Scanner input = new Scanner(System.in);
@@ -162,8 +183,14 @@ public class Tree {
 			String[] pieces = st.split("\\s+");
 			String state = pieces[0];		
 			String county = pieces[1];
-			Double lat = Double.parseDouble(pieces[2]);
-			Double lon = Double.parseDouble(pieces[3]);
+			if (isDouble(pieces[2])) {
+				Double lat = Double.parseDouble(pieces[2]);
+				Double lon = Double.parseDouble(pieces[3]);
+			} else {
+				county += pieces[2];
+				Double lat = Double.parseDouble(pieces[3]);
+				Double lon = Double.parseDouble(pieces[4]);
+			}
 			// Do not count invalid coordinates (0,0)
 			if (lat == 0 && lon == 0) {
 				continue;
@@ -177,30 +204,27 @@ public class Tree {
 
 		if (balanced.equals("yes")) {
 			Collections.sort(coords, Coordinate.coordsXComparator);
-			// Collections.sort(coordsY, Coordinate.coordsYComparator);
 
 			// Continue to grab and insert median until all elements are inserted into the tree
-			// lX = (ArrayList<Coordinate>) coords.clone(); // Includes up to mid
-   //  		lY = (ArrayList<Coordinate>) coords.clone(); // Includes up to mid
-   //  		rX = (ArrayList<Coordinate>) coords.clone(); // Includes after mid
-			// rY = (ArrayList<Coordinate>) coords.clone(); // Includes after mid
 		 	FindMedian(coords, true, coords.size());
+			long endTime = System.nanoTime();
+			long timeElapsedTree = endTime - startTime;
+			System.out.println("\nBalanced tree created\n");
+			System.out.println("Construct tree time in nanoseconds: " + timeElapsedTree);
+
+
+			startTime = System.nanoTime();
 
 		 	Neighbors neigh = new Neighbors();
-
-		 	neigh.KNN(inputCoord, k, root);
-		 	PriorityQueue<ResultTuple> queue = neigh.queue;
-		 	System.out.println("The k nearest points, from furthest to closest are: ");
-		 	for (int i=0; i<k; i++) {
-		 		ResultTuple tup = queue.poll();
-		 		System.out.println("State: " + tup.dat.state + " County: " + tup.dat.county + " Latitude: " + tup.dat.lat + " Longitude: " + tup.dat.lon);
+		 	ArrayList<Coordinate> res = neigh.Nearest(root, inputCoord, k);
+		 	for (Coordinate re : res){
+		 		System.out.println(re.county);
 		 	}
 
 
-		 	long endTime = System.nanoTime();
-			long timeElapsed = endTime - startTime;
-			System.out.println("\nBalanced tree created\n");
-			System.out.println("Execution time in nanoseconds: " + timeElapsed);
+		 	endTime = System.nanoTime();
+			long timeElapsedNeigh = endTime - startTime;
+			System.out.println("Neighbor search time in nanoseconds: " + timeElapsedNeigh);
 			System.out.printf("should be Buchanan: %s\n", root.data.county);
 			System.out.printf("should be Maricopa: %s\n", root.leftChild.data.county);
 			System.out.printf("should be Lake: %s\n", root.rightChild.data.county);
@@ -215,9 +239,21 @@ public class Tree {
 		// For testing with smaller data set -- should NOT be used in prod
 		if (balanced.equals("no")) {
 			long endTime = System.nanoTime();
-			long timeElapsed = endTime - startTime;
+			long timeElapsedTree = endTime - startTime;
 			System.out.println("\nUnbalanced tree created\n");
-			System.out.println("Execution time in nanoseconds: " + timeElapsed);
+			System.out.println("Construct tree time in nanoseconds: " + timeElapsedTree);
+
+			startTime = System.nanoTime();
+		 	Neighbors neigh = new Neighbors();
+		 	ArrayList<Coordinate> res = neigh.Nearest(root, inputCoord, k);
+		 	for (Coordinate re : res){
+		 		System.out.println(re.county);
+		 	}
+
+		 	endTime = System.nanoTime();
+			long timeElapsedNeigh = endTime - startTime;
+			System.out.println("Neighbor search time in nanoseconds: " + timeElapsedNeigh);
+
 			System.out.printf("should be Benton: %s\n", root.data.county);
 			System.out.printf("should be Maricopa: %s\n", root.leftChild.data.county);
 			System.out.printf("should be Buchanan: %s\n", root.rightChild.data.county);

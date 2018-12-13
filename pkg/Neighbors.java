@@ -1,100 +1,82 @@
+
 package pkg;
 
 import java.lang.Math;
 import java.util.PriorityQueue;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.ArrayList;
 
 
 public class Neighbors {
 
-    public static Comparator<ResultTuple> tupleComparator = new Comparator<ResultTuple>() {
-        @Override
-        public int compare(ResultTuple t1, ResultTuple t2) {
-		   Double t1d = t1.dist;
-		   Double t2d = t2.dist;
 
-		   //ascending order
-		   return t2d.compareTo(t1d);
+    public static int k;
+    public static Double champDist;
+    public static Coordinate champCoord;
+    public static Double minChamp = 0.0;
+    public static ArrayList<Coordinate> champs;
+
+    public static Double Haversine(Coordinate a, Coordinate b) {
+        // Find the distance between coordinate pair a and b
+        Double radiusEarth = 6371.00; // in kilometers
+        Double x = (b.lon - a.lon) * Math.cos(Math.toRadians((a.lat + b.lat)/2));
+        Double y = b.lat - a.lat;
+        Double distance = Math.sqrt(x*x + y*y) * radiusEarth;
+        return distance;
+    }
+
+    public static Double hdist(Coordinate p, Tree.Node n, boolean evenLevel){
+        if (!evenLevel) { //lon=0
+            Coordinate p1= new Coordinate(1.0,p.lon, null, null);
+            Coordinate n2= new Coordinate(1.0,n.data.lon, null, null);
+            return Haversine(p1,n.data);
         }
-    };
+        else{
+            Coordinate p1= new Coordinate(p.lat,1.0, null, null);
+            Coordinate n2= new Coordinate(n.data.lat,1.0, null, null);
+            return Haversine(p1,n.data);
+        }
+    }
 
-	public static int k; //user input for k
-	public static PriorityQueue<ResultTuple> queue = new PriorityQueue<ResultTuple>(tupleComparator);
+    public static ArrayList<Coordinate> Nearest(Tree.Node n, Coordinate p, int k) {
+		champCoord = n.data;
+		Coordinate curNearest = nearest(n, p, champCoord, true);
+		minChamp = Haversine(curNearest, p);
+		for(int i=0; i<k; i++) {
+			curNearest = nearest(n, p, champCoord, true);
+			minChamp = Haversine(nearest(n, p, champCoord, true), p);
+			champs.add(curNearest);
+		}
 
-	public static Coordinate inputPoint; // The point that the user inputs to find nearest neighbors
 
+    	return champs;
+    }
 
-	public static Double Haversine(Coordinate a, Coordinate b) {
-		// Find the distance between coordinate pair a and b
-		Double radiusEarth = 6371.00; // in kilometers
-		Double x = (b.lon - a.lon) * Math.cos(Math.toRadians((a.lat + b.lat)/2));
-		Double y = b.lat - a.lat;
-		Double distance = Math.sqrt(x*x + y*y) * radiusEarth;
-		return distance;
-	}
-
-  	public static void KNN(Coordinate input, int k, Tree.Node r) {
-
-        if (input == null) throw new java.lang.NullPointerException(
-                "called contains() with a null Point2D");
-        if (r == null) return;
-    	for (int i = 0; i<k; i++){
-    		ResultTuple tuple = new ResultTuple(Double.MAX_VALUE, null);
-    		queue.add(tuple);
+    public static Coordinate nearest(Tree.Node n, Coordinate p, Coordinate champ, boolean evenLevel) {
+    	
+    	if (n==null) {
+    		return champ;
     	}
-    	System.out.println(input==null);
-        knn(r, input, true);
-   
-    }
-    
-    public static void knn(Tree.Node n, Coordinate input, boolean evenLevel) { //operates on queue
-
-    	//Node n, Point2D p, Point2D champion, boolean evenLevel
-        
-        if (n == null) {
-        	System.out.println("hello");
-        	return;
-        }
-        
-        if (Haversine(n.data, input) < queue.peek().dist) {
-        	queue.poll();
-        	queue.add(new ResultTuple(Haversine(n.data, input),n.data));
-        }
-
-        double toPartitionLine = comparePoints(input, n, evenLevel);
-        if (queue.peek().dat != null) {
-	        if (toPartitionLine < 0) {
-	            knn(n.leftChild, input, !evenLevel);
-
-	            if (Haversine(queue.peek().dat, input) >= toPartitionLine) {
-	                knn(n.rightChild, input, !evenLevel);
-	            }
-	        }
-	        
-	        else {
-	            knn(n.rightChild, input, !evenLevel);
-
-	            if (Haversine(queue.peek().dat, input) >= toPartitionLine) {
-	                knn(n.leftChild, input, !evenLevel);
-	            }
-	        }
-	    }
+    	Double dis = Haversine(n.data, p);
+    	Double disChamp = Haversine(champ, p);
+    	if (dis < disChamp && dis > minChamp) {
+    		champ = n.data;
+    	}
+    	Double partition = dis;
+    	if (partition < 0) {
+    		champ = nearest(n.leftChild, p, champ, !evenLevel);
+    		if (Haversine(champ, p) >= partition) {
+    			champ = nearest(n.rightChild, p, champ, !evenLevel);
+    		}
+    	} else {
+    		champ = nearest(n.rightChild, p, champ, !evenLevel);
+    		if (Haversine(champ, p) >= partition) {
+    			champ = nearest(n.leftChild, p, champ, !evenLevel);
+    		}
+    	}
+    	return champ;
     }
 
-    public static double comparePoints(Coordinate p, Tree.Node n, boolean evenLevel) {
-        if (evenLevel) {
-        	p.lon = 1;
-        	n.lon = 1;
-            return Haversine(p, n.data);
-        }
-        else {
-        	p.lat = 1;
-        	n.lat = 1;
-            return Haversine(p, n.data);
-        }
-    }
 
-	public static void main(String[] args) {
-	}
 }
