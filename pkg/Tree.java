@@ -121,7 +121,7 @@ public class Tree {
  	}
  
 
-	public static boolean isDouble( Double a ) {
+	public static boolean isDouble( Object a ) {
 
 		Double n;
 
@@ -131,7 +131,7 @@ public class Tree {
 
 		}
 
-		catch ( NumberFormatException e ) {
+		catch ( Exception e ) {
 
 		   return false;
 
@@ -180,17 +180,12 @@ public class Tree {
 				continue;
 			}
 			// Parse each data point
-			String[] pieces = st.split("\\s+");
+			String[] pieces = st.split("\t");
 			String state = pieces[0];		
 			String county = pieces[1];
-			if (isDouble(pieces[2])) {
-				Double lat = Double.parseDouble(pieces[2]);
-				Double lon = Double.parseDouble(pieces[3]);
-			} else {
-				county += pieces[2];
-				Double lat = Double.parseDouble(pieces[3]);
-				Double lon = Double.parseDouble(pieces[4]);
-			}
+			Double lat = Double.parseDouble(pieces[2]);
+			Double lon = Double.parseDouble(pieces[3]);
+
 			// Do not count invalid coordinates (0,0)
 			if (lat == 0 && lon == 0) {
 				continue;
