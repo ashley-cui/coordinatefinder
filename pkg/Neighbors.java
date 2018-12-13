@@ -5,7 +5,6 @@ import java.lang.Math;
 import java.util.PriorityQueue;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.ArrayList;
 
 
 public class Neighbors {
@@ -14,8 +13,6 @@ public class Neighbors {
     public static int k;
     public static Double champDist;
     public static Coordinate champCoord;
-    public static Double minChamp = 0.0;
-    public static ArrayList<Coordinate> champs;
 
     public static Double Haversine(Coordinate a, Coordinate b) {
         // Find the distance between coordinate pair a and b
@@ -39,18 +36,15 @@ public class Neighbors {
         }
     }
 
-    public static ArrayList<Coordinate> Nearest(Tree.Node n, Coordinate p, int k) {
+    public static Coordinate Nearest(Tree.Node n, Coordinate p) {
+    	// champDist = Haversine(n.data, p);
 		champCoord = n.data;
-		Coordinate curNearest = nearest(n, p, champCoord, true);
-		minChamp = Haversine(curNearest, p);
-		for(int i=0; i<k; i++) {
-			curNearest = nearest(n, p, champCoord, true);
-			minChamp = Haversine(nearest(n, p, champCoord, true), p);
-			champs.add(curNearest);
-		}
+  //   	System.out.println(n.data.county);
+		// System.out.println(n.rightChild.data.county);
+  //   	System.out.println(p.lat);
+  //   	System.out.println(rt.dat.lat);
 
-
-    	return champs;
+    	return nearest(n, p, champCoord, true);
     }
 
     public static Coordinate nearest(Tree.Node n, Coordinate p, Coordinate champ, boolean evenLevel) {
@@ -60,7 +54,7 @@ public class Neighbors {
     	}
     	Double dis = Haversine(n.data, p);
     	Double disChamp = Haversine(champ, p);
-    	if (dis < disChamp && dis > minChamp) {
+    	if (dis < disChamp) {
     		champ = n.data;
     	}
     	Double partition = dis;

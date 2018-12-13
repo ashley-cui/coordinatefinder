@@ -211,10 +211,8 @@ public class Tree {
 			startTime = System.nanoTime();
 
 		 	Neighbors neigh = new Neighbors();
-		 	ArrayList<Coordinate> res = neigh.Nearest(root, inputCoord, k);
-		 	for (Coordinate re : res){
-		 		System.out.println(re.county);
-		 	}
+		 	Coordinate res = neigh.Nearest(root, inputCoord);
+		 	System.out.println(res.county);
 
 
 		 	endTime = System.nanoTime();
@@ -240,10 +238,8 @@ public class Tree {
 
 			startTime = System.nanoTime();
 		 	Neighbors neigh = new Neighbors();
-		 	ArrayList<Coordinate> res = neigh.Nearest(root, inputCoord, k);
-		 	for (Coordinate re : res){
-		 		System.out.println(re.county);
-		 	}
+		 	Coordinate res = neigh.Nearest(root, inputCoord);
+		 	System.out.println(res.county);
 
 		 	endTime = System.nanoTime();
 			long timeElapsedNeigh = endTime - startTime;
