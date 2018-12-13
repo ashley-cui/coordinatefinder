@@ -22,9 +22,7 @@ This will compile and run the code, and then prompt the user for each of
 four things:
 1. The latitude of the query
 2. The longitude of the query
-3. K, an integer between 1 and 10, which specifies the number of nearest points
-that the program should return to the user
-4. A string no or yes, with the former indicating the use of an unbalanced tree,
+3. A string no or yes, with the former indicating the use of an unbalanced tree,
 and the latter indicating the use of a balanced tree.
 
 
@@ -40,20 +38,12 @@ to balance the tree, the algorithm first uses Merge Sort to sort the coordinates
 and then recursively inserts the median into the tree on successively smaller array 
 sizes until all coordinates have been inserted into the tree.
 
-### Finding the Nearest Neighbors
-The program utilizes a K-nearest-neighbors algorithm to efficiently find the K
-nearest neighbors to the input point, where K is between 1 and 10.  To calculate
+### Finding the Nearest Neighbor
+The program utilizes a Nearest-neighbors algorithm to efficiently find the
+nearest neighbor to the input point.  To calculate
 the distance between the input point and the data points in our data set, it utilizes
-[equirectangular approximation](http://www.movable-type.co.uk/scripts/latlong.html).
-With a priority queue, the program stores the K closest points that it has found so
-far, replacing the values with closer ones as it progresses through the nodes in 
-the tree.
+[equirectangular approximation](http://www.movable-type.co.uk/scripts/latlong.html). It uses a recursive find nearest method that searches different subtrees to find the nearest point, and consistently updating the smallest distance. 
 
-### Computing the County and State of the Input
-To determine a given input coordinate's county and state, the program looks first at
-the 5 nearest neighbors of the input.  This is done as explained in the above
-section, entitled "Finding the Nearest Neighbors".  Based on these 5, it will return
-the county and state combination that appears most frequently.
 
 
 ## Comparisons
@@ -65,3 +55,10 @@ of tree.  Once it has finished running, the program will tell you how long it to
 run in nanoseconds.  This number can be compared with the time from using the alternative
 version of the tree to see which method will run faster.
 
+The unbalanced tree on average has better construct time, but the balanced tree has better search time.
+
+## Implemented Work
+The unbalanced and balanced tree are properly implementmented. The nearest neighbors algorithm was also implemented. However, the nearest neighbors algorithm has a few bugs in it, and may return the incorrect location. But, it is consistent with the location it returns, regardless of the tree. Thus, it may be an off by one error or the likes.Tthe K nearest Neighbors was not implemented due to complications with Java's queue function. 
+
+## Work Breakdown 
+Ashley implemented the nearest neighbors search while Sarah implemented the trees. Pair coding was used a lot, so git commits may not reflect actual work done by any individual. Debugging was done cooperatively, as was this README. 
